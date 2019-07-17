@@ -3,13 +3,8 @@
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
+      <li> <!-- for project euler #22 -->
+        <input type="file" id="files" name="files[]" @change="handleFileChange($event.target.files)"/>
       </li>
       <li>
         <a
@@ -92,6 +87,45 @@ export default {
     }
   },
   methods: {
+    handleFileChange2(ev) {
+      console.log('ev is ');
+    },
+    // project euler 22
+    handleFileChange(file) {
+      const f = file[0];
+      var reader = new FileReader();
+      // Closure to capture the file information.
+      reader.onload = function(theFile) {
+        const res = theFile.currentTarget.result;
+        console.log('res is ', res);
+        let asAr = res.split('\",\"');
+        asAr[0] = asAr[0].replace('\"','');
+        asAr[asAr.length-1] = asAr[asAr.length-1].replace('\"', '');
+        console.log('asAr ', asAr);
+        asAr.sort((a,b) => {
+          if (a === b) return 0
+          if (a < b) return -1
+          return 1
+        })
+        let sum = 0;
+        for (let i = 0; i < asAr.length; i++) {
+          const str = asAr[i];
+          let charValue = 0;
+          for (let j = 0; j < str.length; j++) {
+            charValue += (str.charCodeAt(j) - 64);
+          }
+          charValue *= (i+1);
+          sum+=charValue;
+        }
+        console.log('sum is ', sum);
+        // A is 65 - 64 ===1
+        console.log('charCode of ABC is ', 'ABC'.charCodeAt(0), 'ABC'.charCodeAt(1), 'ABC'.charCodeAt(2))
+        console.log('asAr is ', asAr);
+      };
+      console.log('about to read file ', file);
+      // Read in the image file as a data URL.
+      reader.readAsText(f);
+    },
     isPrime (input) {
       let trial = Math.round(input**.5);
       if (trial % 2 === 0) trial += 1;
@@ -106,6 +140,74 @@ export default {
         trial-=2;
       }
       return true
+    },
+    triangularNumbersFactor () {
+    const limit = 20000;
+    let curTriangle = 0;
+    let triangles = [];
+    for (let i = 1; i < limit; i++) {
+    curTriangle += i;
+    triangles.push({
+    value: curTriangle,
+    factors: new Set()
+    });
+    // get divisors
+    let upperLim = Math.ceil(curTriangle/2);
+    for (let j = 1; j < upperLim; j++) {
+    if (curTriangle%j === 0) {
+    upperLim = curTriangle/j;
+    triangles[i-1].factors.add(curTriangle/j);
+    triangles[i-1].factors.add(j);
+    }
+    }
+    if (triangles[i-1].factors.size >= 500) {
+    console.log('triangle is ', triangles[i-1]);
+    return
+    }
+    }
+    },
+    numberWords () {
+    const singles = ['one', 'two', 'three', 'four', 'five','six', 'seven','eight','nine','ten', 'eleven', 'twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+    const tens = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+    const hundred = 'hundred'
+    const andword = 'and'
+    const thousand = 'thousand'
+    let total = 0;
+    for (let i = 1; i <= 1000; i++) {
+    if (i >= 1 && i <= 19) {
+    console.log('singles[i-1], ', singles[i-1])
+    total+=singles[i-1].length;
+    }
+    if (i >= 20 && i <1000) {
+    let hundreds = Math.floor(i/100);
+    let prefix = hundreds ? singles[hundreds-1] : '';
+    if (prefix) {
+    console.log('prefix, hundred', prefix, hundred)
+    total+= (prefix.length + hundred.length);
+    }
+    let j = i - (hundreds*100);
+    let digit = j%10;
+    if (j !== 0) {
+    console.log('and')
+    if (hundreds) total+=andword.length;
+    if (j >= 20) {
+    let suffix = digit ? singles[(digit-1)] : '';
+    let cur = tens[Math.floor(j/10)-2] + suffix;
+    console.log('cur ', cur);
+    total+=cur.length;
+    }
+    else {
+    console.log('singles[j-1]',singles[j-1])
+    total+=singles[j-1].length;
+    }
+    }
+    }
+    if (i === 1000) {
+    console.log('onethousand')
+    total+='onethousand'.length;
+    }
+    }
+    console.log('total is ', total)
     },
     paliRecursive (input) {
       if (input.length <= 1) return true;
@@ -563,11 +665,59 @@ export default {
       }
       console.log('product is ', product)
       console.log('sum is ', sum);
+    },
+    /**
+     * project euler #21
+     * returns array of divisors of n
+     * e.g. getDivisors of 220 is [1, 2, 4, 5, 10, 11, 20, 22, 44, 55, 110]
+     */
+    getDivisors (n) {
+      let returned = new Set();
+      if (n === 1) return returned;
+      returned.add(1);
+      let max = n;
+      for (let i = 2; i <= max; i++) {
+        if (n % i === 0) {
+          let dividend = n/i;
+          if (dividend >= n || i >= n) continue;
+          max = dividend;
+          returned.add(max);
+          returned.add(i);
+        }
+      }
+      if (n === 3) {
+        console.log('n===3, divisors', returned);
+      }
+      return returned;
+    },
+    getAmicables(upperLim) {
+      let returned = new Set();
+      for (let i = 0; i <= upperLim; i++) {
+        if (returned.has(i)) continue;
+        let divs = this.getDivisors(i);
+        let sum = 0;
+        divs.forEach((cur) => {
+          sum+=cur;
+        })
+        if (i === sum) continue;
+        let sum2 = 0;
+        let divs2 = this.getDivisors(sum);
+        divs2.forEach((cur) => {
+          sum2+=cur;
+        });
+                if (i ===3) {
+                  console.log('i==3=>', sum, sum2)
+                }
+        if (i === sum2) {
+          returned.add(sum);
+          returned.add(i);
+        }
+      }
+      return returned;
     }
   },
   mounted () {
-    // this.calendarCounting();
-    this.factoralSum();
+
   }
 }
 </script>
