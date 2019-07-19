@@ -714,10 +714,48 @@ export default {
         }
       }
       return returned;
+    },
+    sumSet(inputSet) {
+      let sum = 0;
+      for (let i of inputSet) {
+        sum+=i;
+      }
+      return sum;
+    },
+    getAbundantNumberSet() {
+      const upperLim = 28111;
+      let abundants = new Set();
+      for (let i = 1; i < upperLim; i++) {
+        const sum = this.sumSet(this.getDivisors(i));
+        if (sum > i) abundants.add(i);
+      }
+      return abundants;
+    },
+    getSetOfAbundantSums() {
+      const abu = this.getAbundantNumberSet();
+      const upperLim = 28123;
+      const sums = new Set();
+      for (let i of abu) {
+        for (let j of abu) {
+          if (i+j > upperLim) continue;
+          sums.add(i+j);
+        }
+      }
+      return sums;
+    },
+    getSetOfNonAbundantSums() {
+      let abuSums = this.getSetOfAbundantSums();
+      const upperLim = 28123;
+      const non = new Set();
+      for (let i = 1; i <= upperLim; i++) {
+        if (!abuSums.has(i)) non.add(i);
+      }
+      return non;
     }
   },
   mounted () {
-
+    const sum = this.sumSet(this.getSetOfNonAbundantSums())
+    console.log('sum is ', sum);
   }
 }
 </script>
