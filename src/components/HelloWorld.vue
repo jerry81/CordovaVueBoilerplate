@@ -751,11 +751,42 @@ export default {
         if (!abuSums.has(i)) non.add(i);
       }
       return non;
+    },
+    swapItems(input) {
+      return [input[1], input[0]]
+    },
+    shiftToFront(input, index) {
+      return [input[index]].concat(input.slice(0,index)).concat(input.slice(index+1, input.length));
+    },
+    iterateThreeItems(input) {
+      let perms = [];
+      let firstItem = input[0];
+      let remainder = input.slice(1,input.length);
+      let swapped = this.swapItems(remainder);
+      const secondPerm = [firstItem].concat(swapped);
+      perms.push(input);
+      perms.push(secondPerm);
+      const thirdPerm = this.shiftToFront(input, 1);
+      console.log('third perm is ', thirdPerm);
+      perms.push(thirdPerm);
+      firstItem = thirdPerm[0];
+      remainder = thirdPerm.slice(1,thirdPerm.length);
+      swapped = this.swapItems(remainder);
+      const fourthPerm = [firstItem].concat(swapped);
+      perms.push(fourthPerm);
+      const fifthPerm = this.shiftToFront(input, 2);
+      perms.push(fifthPerm);
+      firstItem = fifthPerm[0];
+      remainder = fifthPerm.slice(1,fifthPerm.length);
+      swapped = this.swapItems(remainder);
+      const sixthPerm = [firstItem].concat(swapped);
+      perms.push(sixthPerm);
+      return perms;
     }
   },
   mounted () {
-    const sum = this.sumSet(this.getSetOfNonAbundantSums())
-    console.log('sum is ', sum);
+    console.log('shift to front ', this.shiftToFront([0,1,2], 1))
+    console.log('iterateThree is ', this.iterateThreeItems([0,1,2]));
   }
 }
 </script>
