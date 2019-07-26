@@ -752,41 +752,171 @@ export default {
       }
       return non;
     },
-    swapItems(input) {
-      return [input[1], input[0]]
-    },
     shiftToFront(input, index) {
       return [input[index]].concat(input.slice(0,index)).concat(input.slice(index+1, input.length));
     },
-    iterateThreeItems(input) {
+// region manual
+manuallyPermuteFourItems(input) {
+let perms = [];
+// start by working with last two items
+let prefix = input.slice(0,input.length-2);
+let remainder = input.slice(input.length-2,input.length);
+let swapped = this.shiftToFront(remainder, 1); // last shift for this iteration
+const secondPerm = prefix.concat(swapped);
+perms.push(input);
+perms.push(secondPerm);
+prefix = input.slice(0,input.length-3); // this slice gets smaller and smaller until 0
+remainder = input.slice(input.length-3, input.length);
+let shifted = this.shiftToFront(remainder, 1); // shifting starts at 1
+let prefixOfRemainder = shifted.slice(0,shifted.length-2);
+let remainderOfRemainder = shifted.slice(shifted.length-2, shifted.length);
+const third = prefix.concat(prefixOfRemainder).concat(remainderOfRemainder);
+remainderOfRemainder = this.shiftToFront(remainderOfRemainder, remainderOfRemainder.length-1);
+const fourth = prefix.concat(prefixOfRemainder).concat(remainderOfRemainder);
+perms.push(third);
+perms.push(fourth);
+shifted = this.shiftToFront(remainder, 2); // this is last to shift b/c remainder's length is 2
+prefixOfRemainder = shifted.slice(0,shifted.length-2);
+remainderOfRemainder = shifted.slice(shifted.length-2, shifted.length);
+const fifth = prefix.concat(prefixOfRemainder).concat(remainderOfRemainder);
+remainderOfRemainder = this.shiftToFront(remainderOfRemainder, remainderOfRemainder.length-1);
+const sixth = prefix.concat(prefixOfRemainder).concat(remainderOfRemainder);
+perms.push(fifth);
+perms.push(sixth);
+prefix = input.slice(0, input.length-4) // last prefix slice because input.length-4 is 0
+remainder = input.slice(input.length-4, input.length);
+shifted = this.shiftToFront(remainder, 1);
+prefixOfRemainder = shifted.slice(0, shifted.length-3);
+remainderOfRemainder = shifted.slice(shifted.length-3, shifted.length);
+// with an extra digit, must split up remainder even further
+let prefix3 = remainderOfRemainder.slice(0, remainderOfRemainder.length-2);
+let remainder3 = remainderOfRemainder.slice(remainderOfRemainder.length-2, remainderOfRemainder.length);
+const seventh = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const eigth = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(seventh);
+perms.push(eigth);
+let remainderOfRemainder2 = this.shiftToFront(remainderOfRemainder, 1);
+prefix3 = remainderOfRemainder2.slice(0, remainderOfRemainder2.length-2);
+remainder3 = remainderOfRemainder2.slice(remainderOfRemainder2.length-2, remainderOfRemainder2.length);
+const ninth = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const tenth = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(ninth);
+perms.push(tenth);
+remainderOfRemainder2 = this.shiftToFront(remainderOfRemainder, 2);
+prefix3 = remainderOfRemainder2.slice(0, remainderOfRemainder2.length-2);
+remainder3 = remainderOfRemainder2.slice(remainderOfRemainder2.length-2, remainderOfRemainder2.length);
+const eleven = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const twelve = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(eleven);
+perms.push(twelve);
+shifted = this.shiftToFront(remainder, 2);
+prefixOfRemainder = shifted.slice(0, shifted.length-3);
+remainderOfRemainder = shifted.slice(shifted.length-3, shifted.length);
+prefix3 = remainderOfRemainder.slice(0, remainderOfRemainder.length-2);
+remainder3 = remainderOfRemainder.slice(remainderOfRemainder.length-2, remainderOfRemainder.length);
+const thirteen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const fourteen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(thirteen);
+perms.push(fourteen);
+remainderOfRemainder2 = this.shiftToFront(remainderOfRemainder, 1);
+prefix3 = remainderOfRemainder2.slice(0, remainderOfRemainder2.length-2);
+remainder3 = remainderOfRemainder2.slice(remainderOfRemainder2.length-2, remainderOfRemainder2.length);
+const fifteen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const sixteen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(fifteen);
+perms.push(sixteen);
+remainderOfRemainder2 = this.shiftToFront(remainderOfRemainder, 2);
+prefix3 = remainderOfRemainder2.slice(0, remainderOfRemainder2.length-2);
+remainder3 = remainderOfRemainder2.slice(remainderOfRemainder2.length-2, remainderOfRemainder2.length);
+const seventeen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const eighteen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(seventeen);
+perms.push(eighteen);
+shifted = this.shiftToFront(remainder, 3);
+prefixOfRemainder = shifted.slice(0, shifted.length-3);
+remainderOfRemainder = shifted.slice(shifted.length-3, shifted.length);
+prefix3 = remainderOfRemainder.slice(0, remainderOfRemainder.length-2);
+remainder3 = remainderOfRemainder.slice(remainderOfRemainder.length-2, remainderOfRemainder.length);
+const nineteen = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const twenty = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(nineteen);
+perms.push(twenty);
+remainderOfRemainder2 = this.shiftToFront(remainderOfRemainder, 1);
+prefix3 = remainderOfRemainder2.slice(0, remainderOfRemainder2.length-2);
+remainder3 = remainderOfRemainder2.slice(remainderOfRemainder2.length-2, remainderOfRemainder2.length);
+const a21 = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const a22 = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(a21);
+perms.push(a22);
+remainderOfRemainder2 = this.shiftToFront(remainderOfRemainder, 2);
+prefix3 = remainderOfRemainder2.slice(0, remainderOfRemainder2.length-2);
+remainder3 = remainderOfRemainder2.slice(remainderOfRemainder2.length-2, remainderOfRemainder2.length);
+const a23 = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+remainder3 = this.shiftToFront(remainder3, remainder3.length-1);
+const a24 = prefix.concat(prefixOfRemainder).concat(prefix3).concat(remainder3);
+perms.push(a23);
+perms.push(a24);
+console.log('perms is ', perms);
+return perms;
+},
+iteratePermutations(input) {
       let perms = [];
-      let firstItem = input[0];
-      let remainder = input.slice(1,input.length);
-      let swapped = this.swapItems(remainder);
-      const secondPerm = [firstItem].concat(swapped);
       perms.push(input);
-      perms.push(secondPerm);
-      const thirdPerm = this.shiftToFront(input, 1);
-      console.log('third perm is ', thirdPerm);
-      perms.push(thirdPerm);
-      firstItem = thirdPerm[0];
-      remainder = thirdPerm.slice(1,thirdPerm.length);
-      swapped = this.swapItems(remainder);
-      const fourthPerm = [firstItem].concat(swapped);
-      perms.push(fourthPerm);
-      const fifthPerm = this.shiftToFront(input, 2);
-      perms.push(fifthPerm);
-      firstItem = fifthPerm[0];
-      remainder = fifthPerm.slice(1,fifthPerm.length);
-      swapped = this.swapItems(remainder);
-      const sixthPerm = [firstItem].concat(swapped);
-      perms.push(sixthPerm);
+      for (let prefixEnd = input.length-2; prefixEnd >= 0; prefixEnd--) {
+        let prefix = input.slice(0, prefixEnd);
+        let suffix = input.slice(prefixEnd, input.length);
+        for (let i = 1; i < suffix.length; i++) {
+          // i is placeholder
+          let shifted = this.shiftToFront(suffix, i);
+          perms.push(prefix.concat(shifted));
+          console.log('pushing ', prefix.concat(shifted))
+          console.log('shifted is ', shifted);
+          if (shifted.length <= 2) continue;
+          let suffixes = [shifted];
+          let ii = 1;
+          while (suffixes[suffixes.length-1].length > 2) {
+            let suffix2 = suffixes[suffixes.length-1]
+            suffix2 = suffix2.slice(ii, suffix2.length)
+            suffixes.push(suffix2);
+          }
+          if (suffixes.length >=1) {
+            let lastItem = suffixes.pop();
+            // perform splice
+            const swapped = this.shiftToFront(lastItem, 1);
+            const pushed = prefix.concat(shifted.slice(0,shifted.length - lastItem.length).concat(swapped));
+            perms.push(pushed);
+            console.log('pushing ', pushed);
+          }
+          console.log('suffixes is ', suffixes);
+          // first run, shifted is []
+          // start with swapping last two items
+        }
+      }
       return perms;
+    },
+    computePermutations (input) {
+      if (input.length === 2) {
+        return [input, this.shiftToFront(input, 1)]
+      }
+      if (input.length > 2) {
+
+        let perms = this.computePermutations()
+      }
     }
+// endregion manual
   },
   mounted () {
-    console.log('shift to front ', this.shiftToFront([0,1,2], 1))
-    console.log('iterateThree is ', this.iterateThreeItems([0,1,2]));
+    // console.log('manuallyPermute is ', this.manuallyPermuteFourItems([0,1,2,3]));
+    console.log('iterate ', this.iteratePermutations([0,1,2,3]))
+   // console.log('computePermutations ', this.computePermutations([0,1,2]))
   }
 }
 </script>
