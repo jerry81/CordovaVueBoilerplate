@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { runPE25 } from './euler/pe25';
+import { runPE26 } from './euler/pe26';
 export default {
   name: 'HelloWorld',
   data () {
@@ -627,8 +627,7 @@ export default {
     },
   },
   mounted () {
-    // runPE24();
-    runPE25();
+    runPE26();
   }
 }
 </script>

@@ -61,5 +61,25 @@ function longAddition (addends) {
   return sumArray.join('');
 }
 
+function longDivision(divisor, dividend = 1) {
+  let returned = {
+    whole: 0,
+    decimal: {
+      base: 0,
+      repeat: 0
+    }
+  }
+  let quo = Math.floor(dividend / divisor);
+  returned.whole = quo;
+  let remainder = dividend % divisor;
+  // work on remainder
+  if (remainder != 0) {
 
-export { longAddition }
+  }
+  console.log('quo is ', quo);
+  console.log('remain is ', remainder);
+  return returned;
+}
+
+
+export { longAddition, longDivision }
